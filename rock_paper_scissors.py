@@ -60,11 +60,13 @@ class RandomPlayer(Player):
 class HumanPlayer(Player):
     def move(self):
         while True:
-            move = input("Enter your move (rock, paper, or scissors): ").lower()
+            move = input("Enter your move (rock, paper, or scissors): ")
+            move = move.lower()
             if move in moves:
                 return move
             else:
-                print("Invalid move. Please enter 'rock', 'paper', or 'scissors'.")
+                print("Invalid move. Please enter 'rock', "
+                      "'paper', or 'scissors'.")
 
 
 class ReflectPlayer(Player):
@@ -76,7 +78,8 @@ class ReflectPlayer(Player):
         self.last_opponent_move = their_move
 
     def move(self):
-        return self.last_opponent_move if self.last_opponent_move else random.choice(moves)
+        return (self.last_opponent_move if self.last_opponent_move
+                else random.choice(moves))
 
 
 class CyclePlayer(Player):
