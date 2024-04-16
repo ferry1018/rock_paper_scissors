@@ -24,7 +24,6 @@ class Game:
         move1 = self.p1.move()
         move2 = self.p2.move()
         print(f"Player 1: {move1}  Player 2: {move2}")
-        
         if move1 == move2:
             print("It's a tie!")
         elif beats(move1, move2):
@@ -33,7 +32,6 @@ class Game:
         else:
             print("Player 2 wins!")
             self.p2_score += 1
-        
         print("Current scores:")
         print(f"Player 1: {self.p1_score}")
         print(f"Player 2: {self.p2_score}")
@@ -47,6 +45,11 @@ class Game:
         print("General scores:")
         print(f"Player 1: {self.p1_score}")
         print(f"Player 2: {self.p2_score}")
+
+
+class AllRockPlayer(Player):
+    def move(self):
+        return 'rock'
 
 
 class RandomPlayer(Player):
@@ -97,10 +100,11 @@ def beats(one, two):
 
 if __name__ == '__main__':
     players = {
-        '1': RandomPlayer,
-        '2': ReflectPlayer,
-        '3': CyclePlayer,
-        '4': HumanPlayer
+        '1': AllRockPlayer,
+        '2': RandomPlayer,
+        '3': ReflectPlayer,
+        '4': CyclePlayer,
+        '5': HumanPlayer
     }
     print("Player list:")
     for number, player in players.items():
