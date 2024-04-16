@@ -12,17 +12,19 @@ class Player:
 
 
 class Game:
+    p1_score = 0
+    p2_score = 0
+
     def __init__(self, p1, p2, rounds=3):
         self.p1 = p1
         self.p2 = p2
-        self.p1_score = 0
-        self.p2_score = 0
         self.rounds = rounds
 
     def play_round(self):
         move1 = self.p1.move()
         move2 = self.p2.move()
         print(f"Player 1: {move1}  Player 2: {move2}")
+        
         if move1 == move2:
             print("It's a tie!")
         elif beats(move1, move2):
@@ -31,8 +33,10 @@ class Game:
         else:
             print("Player 2 wins!")
             self.p2_score += 1
-        self.p1.learn(move1, move2)
-        self.p2.learn(move2, move1)
+        
+        print("Current scores:")
+        print(f"Player 1: {self.p1_score}")
+        print(f"Player 2: {self.p2_score}")
 
     def play_game(self):
         print("Game start!")
@@ -40,7 +44,9 @@ class Game:
             print(f"Round {round + 1}:")
             self.play_round()
         print("Game over!")
-        print(f"Final scores - Player 1: {self.p1_score}, Player 2: {self.p2_score}")
+        print("General scores:")
+        print(f"Player 1: {self.p1_score}")
+        print(f"Player 2: {self.p2_score}")
 
 
 class RandomPlayer(Player):
@@ -67,10 +73,7 @@ class ReflectPlayer(Player):
         self.last_opponent_move = their_move
 
     def move(self):
-        if self.last_opponent_move:
-            return self.last_opponent_move
-        else:
-            return random.choice(moves)
+        return self.last_opponent_move if self.last_opponent_move else random.choice(moves)
 
 
 class CyclePlayer(Player):
@@ -92,16 +95,20 @@ def beats(one, two):
             (one == 'paper' and two == 'rock'))
 
 
-def determine_winner(p1_score, p2_score):
-    if p1_score > p2_score:
-        return "Player 1"
-    elif p2_score > p1_score:
-        return "Player 2"
-    else:
-        return "It's a tie!"
-
-
 if __name__ == '__main__':
-    game = Game(HumanPlayer(), RandomPlayer())
+    players = {
+        '1': RandomPlayer,
+        '2': ReflectPlayer,
+        '3': CyclePlayer,
+        '4': HumanPlayer
+    }
+    print("Player list:")
+    for number, player in players.items():
+        print(f"{number}. {player.__name__}")
+    while (p1 := input("Choose player 1: ")) not in players.keys():
+        print("Invalid choice, please select player 1 from the list.")
+    while (p2 := input("Choose player 2: ")) not in players.keys():
+        print("Invalid choice, please select player 2 from the list.")
+
+    game = Game(players[p1](), players[p2]())
     game.play_game()
-    print("Winner:", determine_winner(game.p1_score, game.p2_score))
